@@ -17,6 +17,8 @@ public class PhotoService : IPhotoService
     public async Task<IEnumerable<Photo>> GetAllAsync(string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
+        Console.WriteLine(userId);
+        
         return await _photoRepository.GetAllAsync(userId);
     }
 
@@ -35,12 +37,23 @@ public class PhotoService : IPhotoService
             FileName = dto.FileName,
             FilePath = dto.FilePath,
             UserId = userId,
-            FolderId = dto.FolderId,
-            UploadedAt = DateTime.UtcNow,
-            PhotoTags = dto.TagIds?.Select(tid => new PhotoTag { TagId = tid }).ToList()
+            FolderId = dto.FolderId,   // null olabilir
+            UploadedAt = DateTime.UtcNow
         };
 
-        return await _photoRepository.AddAsync(photo);
+        var created = await _photoRepository.AddAsync(photo);
+
+        if (dto.TagIds != null && dto.TagIds.Any())
+        {
+            created.PhotoTags = dto.TagIds.Select(tid => new PhotoTag
+            {
+                PhotoId = created.Id,
+                TagId = tid
+            }).ToList();
+
+            await _photoRepository.UpdateAsync(created);
+        }
+        return created;
     }
 
     public async Task<Photo> UpdateAsync(int id, PhotoDto dto, string token)
@@ -51,10 +64,17 @@ public class PhotoService : IPhotoService
 
         existing.FileName = dto.FileName;
         existing.FilePath = dto.FilePath;
-        existing.FolderId = dto.FolderId;
+        existing.FolderId = dto.FolderId;  // null olabilir
 
+        // Tag güncellemesi
         if (dto.TagIds != null)
-            existing.PhotoTags = dto.TagIds.Select(tid => new PhotoTag { TagId = tid }).ToList();
+        {
+            existing.PhotoTags = dto.TagIds.Select(tid => new PhotoTag
+            {
+                PhotoId = existing.Id,
+                TagId = tid
+            }).ToList();
+        }
 
         return await _photoRepository.UpdateAsync(existing);
     }

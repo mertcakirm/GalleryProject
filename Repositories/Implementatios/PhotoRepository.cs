@@ -15,6 +15,8 @@ namespace GalleryProject.Repositories.Implementatios;
 
         public async Task<IEnumerable<Photo>> GetAllAsync(int userId)
         {
+        Console.WriteLine(userId);
+            
             return await _context.Photos
                 .Include(p => p.User)
                 .Include(p => p.Folder)

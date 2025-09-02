@@ -99,11 +99,6 @@
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.MvcApplicationPartsAssemblyInfo.cache
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.build.json
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.development.json
-/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets/msbuild.GalleryProject.Microsoft.AspNetCore.StaticWebAssets.props
-/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets/msbuild.build.GalleryProject.props
-/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.GalleryProject.props
-/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.GalleryProject.props
-/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.pack.json
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/scopedcss/bundle/GalleryProject.styles.css
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryP.7EEA954E.Up2Date
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.dll
@@ -112,3 +107,10 @@
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.genruntimeconfig.cache
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/ref/GalleryProject.dll
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.sourcelink.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/bin/Debug/net8.0/GalleryProject.staticwebassets.endpoints.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/rpswa.dswa.cache.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/rjimswa.dswa.cache.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/rjsmrazor.dswa.cache.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/rjsmcshtml.dswa.cache.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.build.json.cache
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.build.endpoints.json
