@@ -2,7 +2,7 @@ using GalleryProject.Models;
 
 namespace GalleryProject.Repositories.Interfaces;
 
-public interface IUserRepository
+public interface IAuthRepository
 {
     Task<User> Register(User user, string password);
     Task<User> Login(string email, string password);
