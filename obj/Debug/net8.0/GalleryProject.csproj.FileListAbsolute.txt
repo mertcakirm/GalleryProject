@@ -111,3 +111,4 @@
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.pdb
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.genruntimeconfig.cache
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/ref/GalleryProject.dll
+/Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/GalleryProject.sourcelink.json

@@ -1,6 +1,7 @@
 using GalleryProject.DTOs;
 using GalleryProject.Models;
 using GalleryProject.Repositories.Interfaces;
+using GalleryProject.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalleryProject.Controllers;
@@ -10,13 +11,14 @@ namespace GalleryProject.Controllers;
     public class UserController : ControllerBase
     {
         private readonly IAuthRepository _authRepository;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IAuthRepository authRepository)
+        public UserController(IAuthRepository authRepository, ITokenService tokenService)
         {
             _authRepository = authRepository;
+            _tokenService = tokenService;
         }
 
-        // POST: api/User/register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
@@ -39,7 +41,6 @@ namespace GalleryProject.Controllers;
             });
         }
 
-        // POST: api/User/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
@@ -47,17 +48,11 @@ namespace GalleryProject.Controllers;
             if (user == null)
                 return Unauthorized("Email veya parola hatalı!");
 
-            // Token oluşturmak istersen buraya ekleyebilirsin
+            var tokenString = _tokenService.CreateToken(user);
 
-            return Ok(new
-            {
-                user.UserId,
-                user.Email,
-                user.UserName
-            });
+            return Ok(tokenString);
         }
 
-        // GET: api/User/exists?email=example@mail.com
         [HttpGet("exists")]
         public async Task<IActionResult> UserExists([FromQuery] string email)
         {
@@ -65,6 +60,3 @@ namespace GalleryProject.Controllers;
             return Ok(new { exists });
         }
     }
-
-
-
