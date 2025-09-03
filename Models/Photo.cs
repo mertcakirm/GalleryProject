@@ -10,11 +10,11 @@ public class Photo
     public DateTime UploadedAt { get; set; }
 
     public int? UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 
     public int? FolderId { get; set; }
-    public Folder Folder { get; set; }
+    public Folder? Folder { get; set; }
+    
     [JsonIgnore]
-    // Tags many-to-many
     public ICollection<PhotoTag> PhotoTags { get; set; }
 }
