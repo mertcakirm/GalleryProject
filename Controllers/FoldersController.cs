@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using GalleryProject.DTOs;
 using GalleryProject.Models;
 using GalleryProject.Repositories;
 using GalleryProject.Repositories.Interfaces;
+using GalleryProject.Services.Interfaces;
 
 namespace GalleryProject.Controllers
 {
@@ -10,43 +12,35 @@ namespace GalleryProject.Controllers
     [Route("api/[controller]")]
     public class FoldersController : ControllerBase
     {
-        private readonly IFolderRepository _folderRepository;
+        private readonly IFolderService _folderService;
 
-        public FoldersController(IFolderRepository folderRepository)
+        public FoldersController(IFolderService folderService)
         {
-            _folderRepository = folderRepository;
+            _folderService = folderService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _folderRepository.GetAllAsync());
+        public async Task<IActionResult> GetAll([FromHeader(Name = "Authorization")] string token) => Ok(await _folderService.GetAllAsync(token));
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id,[FromHeader(Name = "Authorization")] string token)
         {
-            var folder = await _folderRepository.GetByIdAsync(id);
+            var folder = await _folderService.GetByIdAsync(id,token);
             if (folder == null) return NotFound();
             return Ok(folder);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Folder folder)
+        public async Task<IActionResult> Create(FolderDto folder,[FromHeader(Name = "Authorization")] string token)
         {
-            var created = await _folderRepository.AddAsync(folder);
+            var created = await _folderService.AddAsync(folder,token);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Folder folder)
-        {
-            if (id != folder.Id) return BadRequest();
-            var updated = await _folderRepository.UpdateAsync(folder);
-            return Ok(updated);
-        }
-
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id,[FromHeader(Name = "Authorization")] string token)
         {
-            var result = await _folderRepository.DeleteAsync(id);
+            var result = await _folderService.DeleteAsync(id,token);
             if (!result) return NotFound();
             return NoContent();
         }

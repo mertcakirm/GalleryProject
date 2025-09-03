@@ -26,14 +26,13 @@ namespace GalleryProject.Repositories.Implementatios;
                 .ToListAsync();
         }
 
-        public async Task<Photo> GetByIdAsync(int id,int userId)
+        public async Task<Photo> GetByIdAsync(int id)
         {
             return await _context.Photos
                 .Include(p => p.User)
                 .Include(p => p.Folder)
                 .Include(p => p.PhotoTags)
                 .ThenInclude(pt => pt.Tag)
-                .Where(u=>u.UserId==userId)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -43,17 +42,11 @@ namespace GalleryProject.Repositories.Implementatios;
             await _context.SaveChangesAsync();
             return photo;
         }
+        
 
-        public async Task<Photo> UpdateAsync(Photo photo)
+        public async Task<bool> DeleteAsync(int photoId)
         {
-            _context.Photos.Update(photo);
-            await _context.SaveChangesAsync();
-            return photo;
-        }
-
-        public async Task<bool> DeleteAsync(int photoId, int userId)
-        {
-            var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == photoId && p.UserId == userId);
+            var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == photoId);
             if (photo == null) return false;
 
             _context.Photos.Remove(photo);

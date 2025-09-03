@@ -4,9 +4,8 @@ namespace GalleryProject.Repositories.Interfaces;
 
 public interface ITagRepository
 {
-    Task<IEnumerable<Tag>> GetAllAsync();
-    Task<Tag> GetByIdAsync(int id);
-    Task<Tag> AddAsync(Tag tag);
-    Task<Tag> UpdateAsync(Tag tag);
-    Task<bool> DeleteAsync(int id);
+    public Task<IEnumerable<Tag>> GetAllAsync(int userId);
+    public Task<Tag> GetByIdAsync(int id);
+    public Task<Tag> AddAsync(Tag tag);
+    public Task<bool> DeleteAsync(int id);
 }

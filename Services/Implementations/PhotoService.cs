@@ -33,9 +33,9 @@ public class PhotoService : IPhotoService
     public async Task<PhotoResponseDto?> GetByIdAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
-        var photo = await _photoRepository.GetByIdAsync(id, userId);
+        var photo = await _photoRepository.GetByIdAsync(id);
+        if (photo.UserId != userId) return null;
 
-        if (photo == null) return null;
 
         return new PhotoResponseDto
         {
@@ -69,10 +69,9 @@ public class PhotoService : IPhotoService
     public async Task<bool> DeleteAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
-        var photo = await _photoRepository.GetByIdAsync(id, userId);
-        if (photo == null || photo.UserId != userId)
-            return false;
+        var photo = await _photoRepository.GetByIdAsync(id);
+        if (photo.UserId != userId) return false;
 
-        return await _photoRepository.DeleteAsync(id, userId);
+        return await _photoRepository.DeleteAsync(id);
     }
 }

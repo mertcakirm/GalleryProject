@@ -13,11 +13,12 @@ namespace GalleryProject.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Folder>> GetAllAsync()
+        public async Task<IEnumerable<Folder>> GetAllAsync(int userId)
         {
             return await _context.Folders
                 .Include(f => f.User)
                 .Include(f => f.Photos)
+                .Where(f => f.UserId == userId)
                 .ToListAsync();
         }
 
@@ -32,13 +33,6 @@ namespace GalleryProject.Repositories
         public async Task<Folder> AddAsync(Folder folder)
         {
             await _context.Folders.AddAsync(folder);
-            await _context.SaveChangesAsync();
-            return folder;
-        }
-
-        public async Task<Folder> UpdateAsync(Folder folder)
-        {
-            _context.Folders.Update(folder);
             await _context.SaveChangesAsync();
             return folder;
         }

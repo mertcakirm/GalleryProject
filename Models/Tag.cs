@@ -4,6 +4,9 @@ public class Tag
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    
+    public int UserId { get; set; }
+    public User User { get; set; }
 
     // Navigation
     public ICollection<PhotoTag> PhotoTags { get; set; }

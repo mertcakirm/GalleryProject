@@ -13,11 +13,12 @@ namespace GalleryProject.Repositories.Implementatios;
             _context = context;
         }
 
-        public async Task<IEnumerable<Tag>> GetAllAsync()
+        public async Task<IEnumerable<Tag>> GetAllAsync(int userId)
         {
             return await _context.Tags
                 .Include(t => t.PhotoTags)
                 .ThenInclude(pt => pt.Photo)
+                .Where(f=>f.UserId == userId)
                 .ToListAsync();
         }
 
@@ -36,12 +37,6 @@ namespace GalleryProject.Repositories.Implementatios;
             return tag;
         }
 
-        public async Task<Tag> UpdateAsync(Tag tag)
-        {
-            _context.Tags.Update(tag);
-            await _context.SaveChangesAsync();
-            return tag;
-        }
 
         public async Task<bool> DeleteAsync(int id)
         {
