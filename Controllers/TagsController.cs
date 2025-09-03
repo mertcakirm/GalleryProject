@@ -19,6 +19,11 @@ namespace GalleryProject.Controllers
             _tagService = tagService;
         }
 
+        [HttpGet("test-error")]
+        public IActionResult TestError()
+        {
+            throw new Exception("Middleware test exception!");
+        }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader(Name = "Authorization")] string token) => Ok(await _tagService.GetAllAsync(token));
 

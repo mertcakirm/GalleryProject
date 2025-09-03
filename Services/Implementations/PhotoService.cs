@@ -2,6 +2,9 @@ using GalleryProject.DTOs;
 using GalleryProject.Models;
 using GalleryProject.Repositories.Interfaces;
 using GalleryProject.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace GalleryProject.Services.Implementations;
 
 public class PhotoService : IPhotoService
 {
@@ -30,12 +33,16 @@ public class PhotoService : IPhotoService
         });
     }
 
-    public async Task<PhotoResponseDto?> GetByIdAsync(int id, string token)
+    public async Task<PhotoResponseDto> GetByIdAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
         var photo = await _photoRepository.GetByIdAsync(id);
-        if (photo.UserId != userId) return null;
 
+        if (photo == null)
+            throw new KeyNotFoundException($"ID {id} olan fotoğraf bulunamadı.");
+
+        if (photo.UserId != userId)
+            throw new UnauthorizedAccessException("Bu fotoğrafa erişim yetkiniz yok.");
 
         return new PhotoResponseDto
         {
@@ -61,17 +68,32 @@ public class PhotoService : IPhotoService
             UploadedAt = DateTime.UtcNow
         };
 
-        var created = await _photoRepository.AddAsync(photo);
-        
-        return created;
+        try
+        {
+            var created = await _photoRepository.AddAsync(photo);
+            return created;
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException($"'{dto.FileName}' adında bir fotoğraf zaten mevcut.", ex);
+        }
     }
 
     public async Task<bool> DeleteAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
         var photo = await _photoRepository.GetByIdAsync(id);
-        if (photo.UserId != userId) return false;
 
-        return await _photoRepository.DeleteAsync(id);
+        if (photo == null)
+            throw new KeyNotFoundException($"ID {id} olan fotoğraf bulunamadı.");
+
+        if (photo.UserId != userId)
+            throw new UnauthorizedAccessException("Bu fotoğrafı silme yetkiniz yok.");
+
+        var deleted = await _photoRepository.DeleteAsync(id);
+        if (!deleted)
+            throw new InvalidOperationException("Fotoğraf silinemedi, bir sorun oluştu.");
+        return true;
+        
     }
 }

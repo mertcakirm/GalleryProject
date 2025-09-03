@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace GalleryProject.Models;
@@ -5,6 +6,7 @@ namespace GalleryProject.Models;
 public class Photo
 {
     public int Id { get; set; }
+    [MaxLength(255)]
     public string FileName { get; set; }
     public string FilePath { get; set; }
     public DateTime UploadedAt { get; set; }

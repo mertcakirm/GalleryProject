@@ -27,6 +27,20 @@ public class AppDbContext : DbContext
             .WithMany(t => t.PhotoTags)
             .HasForeignKey(pt => pt.TagId);
 
+        modelBuilder.Entity<Tag>()
+            .HasIndex(t => t.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Photo>()
+            .HasIndex(t => t.FileName)
+            .IsUnique();
+
+        modelBuilder.Entity<Folder>()
+            .HasIndex(f => new { f.UserId, f.Name })
+            .IsUnique()
+            .HasDatabaseName("IX_Folders_UserId_Name")
+            .HasFilter(null); 
+        
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -2,6 +2,7 @@ using GalleryProject.DTOs;
 using GalleryProject.Models;
 using GalleryProject.Repositories.Interfaces;
 using GalleryProject.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GalleryProject.Services.Implementations;
 
@@ -29,12 +30,16 @@ public class FolderService : IFolderService
         });
     }
 
-    public async Task<FolderResponseDto?> GetByIdAsync(int id, string token)
+    public async Task<FolderResponseDto> GetByIdAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
         var folder = await _folderRepository.GetByIdAsync(id);
 
-        if (folder.UserId != userId) return null;
+        if (folder == null)
+            throw new KeyNotFoundException($"ID {id} olan klasör bulunamadı.");
+
+        if (folder.UserId != userId)
+            throw new UnauthorizedAccessException("Bu klasöre erişim yetkiniz yok.");
 
         return new FolderResponseDto
         {
@@ -54,22 +59,36 @@ public class FolderService : IFolderService
             UserId = userId
         };
 
-        var created = await _folderRepository.AddAsync(newFolder);
-
-        return new FolderResponseDto
+        try
         {
-            Id = created.Id,
-            Name = created.Name,
-            UserId = created.UserId
-        };
+            var created = await _folderRepository.AddAsync(newFolder);
+            return new FolderResponseDto
+            {
+                Id = created.Id,
+                Name = created.Name,
+                UserId = created.UserId
+            };
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new InvalidOperationException($"'{folder.Name}' adında bir klasör zaten mevcut.", ex);
+        }
     }
 
     public async Task<bool> DeleteAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
         var folder = await _folderRepository.GetByIdAsync(id);
-        if (folder.UserId != userId) return false;
 
-        return await _folderRepository.DeleteAsync(id);
+        if (folder == null)
+            throw new KeyNotFoundException($"ID {id} olan klasör bulunamadı.");
+
+        if (folder.UserId != userId)
+            throw new UnauthorizedAccessException("Bu klasörü silme yetkiniz yok.");
+
+        var deleted = await _folderRepository.DeleteAsync(id);
+        if (!deleted)
+            throw new InvalidOperationException("Klasör silinemedi, bir sorun oluştu.");
+        return true;
     }
 }

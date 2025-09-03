@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GalleryProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250902101924_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250903180227_FixFolderNameType")]
+    partial class FixFolderNameType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,14 +30,17 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Folders_UserId_Name");
 
                     b.ToTable("Folders");
                 });
@@ -50,7 +53,8 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
@@ -62,10 +66,13 @@ namespace GalleryProject.Migrations
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FileName")
+                        .IsUnique();
 
                     b.HasIndex("FolderId");
 
@@ -97,9 +104,18 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tags");
                 });
@@ -112,7 +128,8 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
@@ -128,7 +145,8 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId");
 
@@ -154,9 +172,7 @@ namespace GalleryProject.Migrations
 
                     b.HasOne("GalleryProject.Models.User", "User")
                         .WithMany("Photos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Folder");
 
@@ -180,6 +196,17 @@ namespace GalleryProject.Migrations
                     b.Navigation("Photo");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("GalleryProject.Models.Tag", b =>
+                {
+                    b.HasOne("GalleryProject.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GalleryProject.Models.Folder", b =>
