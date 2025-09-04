@@ -19,6 +19,7 @@ namespace GalleryProject.Repositories
                 .Include(f => f.User)
                 .Include(f => f.Photos)
                 .Where(f => f.UserId == userId)
+                .OrderBy(f=>f.Id)
                 .ToListAsync();
         }
 

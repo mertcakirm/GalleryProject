@@ -15,7 +15,6 @@ namespace GalleryProject.Repositories.Implementatios;
 
         public async Task<IEnumerable<Photo>> GetAllAsync(int userId)
         {
-        Console.WriteLine(userId);
             
             return await _context.Photos
                 .Include(p => p.User)
@@ -23,10 +22,11 @@ namespace GalleryProject.Repositories.Implementatios;
                 .Include(p => p.PhotoTags)
                 .ThenInclude(pt => pt.Tag)
                 .Where(u => u.UserId == userId)
+                .OrderByDescending(f=>f.UploadedAt)
                 .ToListAsync();
         }
 
-        public async Task<Photo> GetByIdAsync(int id)
+        public async Task<Photo?> GetByIdAsync(int id)
         {
             return await _context.Photos
                 .Include(p => p.User)

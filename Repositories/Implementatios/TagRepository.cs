@@ -19,10 +19,11 @@ namespace GalleryProject.Repositories.Implementatios;
                 .Include(t => t.PhotoTags)
                 .ThenInclude(pt => pt.Photo)
                 .Where(f=>f.UserId == userId)
+                .OrderByDescending(f=>f.Id)
                 .ToListAsync();
         }
 
-        public async Task<Tag> GetByIdAsync(int id)
+        public async Task<Tag?> GetByIdAsync(int id)
         {
             return await _context.Tags
                 .Include(t => t.PhotoTags)

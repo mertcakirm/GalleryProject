@@ -8,12 +8,12 @@ namespace GalleryProject.Controllers;
 
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _authRepository;
         private readonly ITokenService _tokenService;
 
-        public UserController(IAuthRepository authRepository, ITokenService tokenService)
+        public AuthController(IAuthRepository authRepository, ITokenService tokenService)
         {
             _authRepository = authRepository;
             _tokenService = tokenService;
@@ -25,13 +25,14 @@ namespace GalleryProject.Controllers;
             if (await _authRepository.UserExists(request.Email))
                 return BadRequest("Bu email zaten kayıtlı!");
 
-            var user = new User
+            var newUser = new User
             {
+                UserName = request.UserName,
                 Email = request.Email,
-                UserName = request.UserName
+                RoleId = 1 
             };
 
-            var createdUser = await _authRepository.Register(user, request.Password);
+            var createdUser = await _authRepository.Register(newUser, request.Password);
 
             return Ok(new
             {

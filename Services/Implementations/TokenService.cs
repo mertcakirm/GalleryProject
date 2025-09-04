@@ -22,7 +22,8 @@ namespace GalleryProject.Services.Implementations
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()), // userId
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim("roleId", user.RoleId.ToString())
             };
 
             // SHA256 kullanıyoruz
@@ -59,6 +60,22 @@ namespace GalleryProject.Services.Implementations
                 throw new UnauthorizedAccessException("Token içinde userId bulunamadı");
 
             return int.Parse(userIdClaim.Value);
+        }
+        
+        public int GetRoleIdFromToken(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+                throw new ArgumentException("Token boş olamaz");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token.Replace("Bearer ", ""));
+
+            var roleClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "roleId");
+
+            if (roleClaim == null)
+                throw new UnauthorizedAccessException("Token içinde roleId bulunamadı");
+
+            return int.Parse(roleClaim.Value);
         }
     }
 }

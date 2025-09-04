@@ -89,6 +89,8 @@ builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IFolderRepository, FolderRepository>();
 builder.Services.AddScoped<IFolderService, FolderService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

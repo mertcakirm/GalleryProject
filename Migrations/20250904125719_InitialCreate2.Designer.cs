@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GalleryProject.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250903180227_FixFolderNameType")]
-    partial class FixFolderNameType
+    [Migration("20250904125719_InitialCreate2")]
+    partial class InitialCreate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,23 @@ namespace GalleryProject.Migrations
                     b.ToTable("PhotoTags");
                 });
 
+            modelBuilder.Entity("GalleryProject.Models.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("longtext")
+                        .HasDefaultValue("user");
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("GalleryProject.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -141,7 +158,12 @@ namespace GalleryProject.Migrations
 
                     b.Property<string>("ProfileImage")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("longtext")
+                        .HasDefaultValue("https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -149,6 +171,8 @@ namespace GalleryProject.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -209,6 +233,18 @@ namespace GalleryProject.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GalleryProject.Models.User", b =>
+                {
+                    b.HasOne("GalleryProject.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("users_ibfk_1");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("GalleryProject.Models.Folder", b =>
                 {
                     b.Navigation("Photos");
@@ -217,6 +253,11 @@ namespace GalleryProject.Migrations
             modelBuilder.Entity("GalleryProject.Models.Photo", b =>
                 {
                     b.Navigation("PhotoTags");
+                });
+
+            modelBuilder.Entity("GalleryProject.Models.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("GalleryProject.Models.Tag", b =>

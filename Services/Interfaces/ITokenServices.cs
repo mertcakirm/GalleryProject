@@ -6,4 +6,5 @@ public interface ITokenService
 {
     string CreateToken(User user);
     int GetUserIdFromToken(string token);
+    int GetRoleIdFromToken(string token);
 }

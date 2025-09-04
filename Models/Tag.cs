@@ -1,16 +1,23 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace GalleryProject.Models;
-
-public class Tag
+namespace GalleryProject.Models
 {
-    public int Id { get; set; }
-    [MaxLength(255)]
-    public string Name { get; set; }
-    
-    public int UserId { get; set; }
-    public User User { get; set; }
+    public class Tag
+    {
+        public Tag()
+        {
+            PhotoTags = new HashSet<PhotoTag>();
+        }
 
-    // Navigation
-    public ICollection<PhotoTag> PhotoTags { get; set; }
+        public int Id { get; set; }
+
+        [MaxLength(255)]
+        public string Name { get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
+
+        public ICollection<PhotoTag> PhotoTags { get; set; }
+    }
 }
