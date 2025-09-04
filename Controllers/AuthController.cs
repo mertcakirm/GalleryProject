@@ -53,11 +53,5 @@ namespace GalleryProject.Controllers;
 
             return Ok(tokenString);
         }
-
-        [HttpGet("exists")]
-        public async Task<IActionResult> UserExists([FromQuery] string email)
-        {
-            var exists = await _authRepository.UserExists(email);
-            return Ok(new { exists });
-        }
+        
     }

@@ -1,9 +1,12 @@
 using GalleryProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalleryProject.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;

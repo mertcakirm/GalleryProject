@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using GalleryProject.DTOs;
-using GalleryProject.Models;
-using GalleryProject.Repositories;
-using GalleryProject.Repositories.Interfaces;
 using GalleryProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GalleryProject.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class FoldersController : ControllerBase
     {
         private readonly IFolderService _folderService;

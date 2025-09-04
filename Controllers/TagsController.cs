@@ -5,11 +5,13 @@ using GalleryProject.Models;
 using GalleryProject.Repositories;
 using GalleryProject.Repositories.Interfaces;
 using GalleryProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GalleryProject.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TagsController : ControllerBase
     {
         private readonly ITagService _tagService;

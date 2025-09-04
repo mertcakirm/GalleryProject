@@ -1,11 +1,14 @@
 using GalleryProject.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using GalleryProject.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GalleryProject.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class PhotosController : ControllerBase
 {
     private readonly IPhotoService _photoService;
