@@ -38,11 +38,17 @@ namespace GalleryProject.Repositories.Implementatios;
 
         public async Task<Photo> AddAsync(Photo photo)
         {
-            await _context.Photos.AddAsync(photo);
-            await _context.SaveChangesAsync();
-            return photo;
+            try
+            {
+                await _context.Photos.AddAsync(photo);
+                await _context.SaveChangesAsync();
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"DB kayıt hatası: {ex.InnerException?.Message ?? ex.Message}", ex);
+            }
         }
-        
 
         public async Task<bool> DeleteAsync(int photoId)
         {

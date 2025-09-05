@@ -8,4 +8,5 @@ public class PhotoDto
     public int? UserId { get; set; }
     public int? FolderId { get; set; }
     public List<int>? TagIds { get; set; }
+    public IFormFile File { get; set; } = null!;
 }

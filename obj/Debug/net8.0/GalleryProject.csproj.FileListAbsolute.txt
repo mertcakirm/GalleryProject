@@ -114,3 +114,4 @@
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/rjsmcshtml.dswa.cache.json
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.build.json.cache
 /Users/mertcakir/BackEnd-Projects/GalleryProject/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/Users/mertcakir/BackEnd-Projects/GalleryProject/bin/Debug/net8.0/GalleryProject.staticwebassets.runtime.json

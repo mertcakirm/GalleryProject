@@ -31,9 +31,11 @@ public class PhotosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromHeader(Name = "Authorization")] string token, [FromBody] PhotoDto dto)
+    public async Task<IActionResult> Upload(
+        [FromHeader(Name = "Authorization")] string token,
+        [FromForm] PhotoUploadDto dto)
     {
-        var created = await _photoService.AddAsync(dto, token);
+        var created = await _photoService.UploadAsync(dto, token);
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 

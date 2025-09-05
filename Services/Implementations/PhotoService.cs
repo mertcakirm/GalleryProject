@@ -33,7 +33,7 @@ public class PhotoService : IPhotoService
         });
     }
 
-    public async Task<PhotoResponseDto> GetByIdAsync(int id, string token)
+    public async Task<PhotoResponseDto?> GetByIdAsync(int id, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
         var photo = await _photoRepository.GetByIdAsync(id);
@@ -55,28 +55,38 @@ public class PhotoService : IPhotoService
         };
     }
 
-    public async Task<Photo> AddAsync(PhotoDto dto, string token)
+    public async Task<Photo> UploadAsync(PhotoUploadDto dto, string token)
     {
         var userId = _tokenService.GetUserIdFromToken(token);
 
+        // wwwroot/uploads/[userId] klasörüne kaydedelim
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", userId.ToString());
+
+        if (!Directory.Exists(uploadsFolder))
+            Directory.CreateDirectory(uploadsFolder);
+
+        // Benzersiz dosya adı
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.File.FileName);
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        // Dosyayı diske kaydet
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await dto.File.CopyToAsync(stream);
+        }
+
+        // DB’ye kayıt
         var photo = new Photo
         {
-            FileName = dto.FileName,
-            FilePath = dto.FilePath,
+            FileName = dto.File.FileName, // orijinal isim
+            FilePath = $"/uploads/{userId}/{fileName}", // URL olarak sakla
             UserId = userId,
             FolderId = dto.FolderId,
             UploadedAt = DateTime.UtcNow
         };
 
-        try
-        {
-            var created = await _photoRepository.AddAsync(photo);
-            return created;
-        }
-        catch (DbUpdateException ex)
-        {
-            throw new InvalidOperationException($"'{dto.FileName}' adında bir fotoğraf zaten mevcut.", ex);
-        }
+        var created = await _photoRepository.AddAsync(photo);
+        return created;
     }
 
     public async Task<bool> DeleteAsync(int id, string token)
