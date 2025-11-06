@@ -10,7 +10,6 @@
 - **Entity Framework Core**
 - **MySQL**
 - **JWT Authentication**
-- **AutoMapper**
 - **Dependency Injection**
 - **wwwroot File Storage** (images are stored physically in the `wwwroot` folder)
 
